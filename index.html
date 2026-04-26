@@ -73,7 +73,7 @@
             text-align: center; padding: 7rem 2rem 5rem;
             position: relative; overflow: hidden;
             background:
-                linear-gradient(155deg, rgba(140,47,29,0.84) 0%, rgba(184,56,24,0.80) 40%, rgba(242,140,61,0.74) 100%),
+                linear-gradient(155deg, rgba(100,25,8,0.93) 0%, rgba(155,42,16,0.91) 45%, rgba(195,80,25,0.88) 100%),
                 url('images/casal-praia2.jpg') center 35% / cover no-repeat;
         }
         .hero::before {
@@ -231,25 +231,24 @@
         /* ── CINEMATIC PHOTO BREAK ── */
         .photo-cinematic {
             position: relative;
-            height: 72vh;
-            max-height: 640px;
+            height: 80vh;
+            max-height: 700px;
             overflow: hidden;
         }
         .photo-cinematic img {
-            width: 100%; height: 115%;
+            width: 100%; height: 100%;
             object-fit: cover;
-            object-position: center 20%;
+            object-position: center 30%;
             display: block;
-            will-change: transform;
         }
         .photo-cinematic-veil {
             position: absolute; inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(80,21,10,0.28) 0%,
-                transparent 25%,
-                transparent 72%,
-                rgba(253,245,240,0.6) 100%
+                rgba(80,21,10,0.22) 0%,
+                transparent 20%,
+                transparent 75%,
+                rgba(253,245,240,0.55) 100%
             );
             pointer-events: none;
         }
@@ -494,16 +493,15 @@
         /* ── PHOTO STRIP (antes do footer) ── */
         .photo-strip {
             position: relative;
-            height: 55vh;
-            max-height: 480px;
+            height: 80vh;
+            max-height: 700px;
             overflow: hidden;
         }
         .photo-strip img {
-            width: 100%; height: 115%;
+            width: 100%; height: 100%;
             object-fit: cover;
-            object-position: center 30%;
+            object-position: center center;
             display: block;
-            will-change: transform;
         }
         .photo-strip-veil {
             position: absolute; inset: 0;
@@ -538,9 +536,14 @@
         }
         .footer-names {
             font-family: 'Great Vibes', cursive; font-size: 3.8rem;
-            color: var(--peach); margin-bottom: 0.5rem;
+            color: var(--peach); margin-bottom: 0.1rem;
         }
-        .footer-date { font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,216,193,0.55); }
+        .footer-forever {
+            font-family: 'Playfair Display', serif; font-style: italic;
+            font-size: 1rem; letter-spacing: 0.18em;
+            color: rgba(255,216,193,0.55); margin-bottom: 0.1rem;
+        }
+        .footer-date { font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,216,193,0.38); }
         .footer-love { font-size: 0.75rem; color: rgba(255,216,193,0.3); margin-top: 1.75rem; }
 
         /* ── TOAST ── */
@@ -670,14 +673,8 @@
     </div>
 </section>
 
-<!-- FOTO CINEMATOGRÁFICA — casal-praia3 (quase se beijando) -->
-<div class="photo-cinematic" aria-hidden="true">
-    <img src="images/casal-praia3.jpg" alt="" id="parallax-romantic" loading="lazy">
-    <div class="photo-cinematic-veil"></div>
-</div>
-
 <!-- EVENT -->
-<section class="section" id="evento">
+<section class="section" id="evento" style="padding-top:3.5rem">
     <div class="container">
         <p class="section-label reveal">onde e quando</p>
         <h2 class="section-title reveal reveal-d1">O Grande Dia</h2>
@@ -905,15 +902,13 @@
 <div class="photo-strip" aria-hidden="true">
     <img src="images/casal-praia4.jpg" alt="" id="parallax-hands" loading="lazy">
     <div class="photo-strip-veil"></div>
-    <div class="photo-strip-quote">
-        <p>Para sempre</p>
-    </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
     <p class="footer-names">Henrique &amp; Shellen</p>
-    <p class="footer-date">22 &nbsp;·&nbsp; 07 &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; São Paulo</p>
+    <p class="footer-forever">para sempre</p>
+    <p class="footer-date" style="margin-top:1rem">22 &nbsp;·&nbsp; 07 &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; São Paulo</p>
     <p class="footer-love">Feito com ♡ para o nosso grande dia</p>
 </footer>
 
@@ -960,23 +955,6 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
 
-    /* ── Parallax suave nas fotos cinematográficas ── */
-    const parallaxItems = [
-        { img: document.getElementById('parallax-romantic'), wrap: document.querySelector('.photo-cinematic') },
-        { img: document.getElementById('parallax-hands'),    wrap: document.querySelector('.photo-strip') },
-    ];
-
-    function onScroll() {
-        parallaxItems.forEach(function (item) {
-            if (!item.img || !item.wrap) return;
-            const rect = item.wrap.getBoundingClientRect();
-            if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-            const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-            item.img.style.transform = 'translateY(' + ((progress - 0.5) * -55) + 'px)';
-        });
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
 
     /* ── Radio cards ── */
     const radios = document.querySelectorAll('.radio-card input[type="radio"]');
