@@ -443,24 +443,88 @@
         .form-success p { color: var(--mid); font-size: 0.95rem; line-height: 1.7; }
 
         /* ── GIFTS ── */
-        .gift-list { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem; }
+        .gift-intro {
+            font-family: 'Playfair Display', serif; font-style: italic;
+            color: var(--mid); font-size: 0.98rem; line-height: 1.9;
+            max-width: 560px; margin: 0 auto 2rem; text-align: center;
+        }
+        .toggle-list-btn {
+            display: block; margin: 0 auto 2rem;
+            background: none; border: 1.5px solid var(--papaya);
+            color: var(--rust); font-family: 'Playfair Display', serif;
+            font-size: 0.92rem; padding: 0.85rem 2.2rem; border-radius: 50px;
+            cursor: pointer; transition: all 0.25s; letter-spacing: 0.04em;
+        }
+        .toggle-list-btn:hover {
+            background: var(--papaya); color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(241,138,122,0.3);
+        }
+        .gift-list-container { animation: giftFadeIn 0.4s ease; margin-bottom: 2rem; }
+        @keyframes giftFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .gift-category {
+            margin-bottom: 0.85rem; border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(241,138,122,0.2);
+            box-shadow: 0 2px 12px rgba(140,47,29,0.04);
+        }
+        .category-header {
+            width: 100%; background: linear-gradient(135deg, rgba(253,245,240,0.95), rgba(255,230,210,0.4));
+            border: none; padding: 1.1rem 1.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; font-family: 'Playfair Display', serif;
+            font-size: 1rem; color: var(--rust); transition: background 0.2s; text-align: left;
+        }
+        .category-header:hover { background: rgba(241,138,122,0.13); }
+        .category-header-left { display: flex; align-items: center; gap: 0.75rem; }
+        .category-icon { font-size: 1.2rem; }
+        .category-count {
+            font-size: 0.7rem; color: var(--papaya); font-family: inherit; font-style: normal;
+            background: rgba(241,138,122,0.12); padding: 0.2rem 0.7rem; border-radius: 50px;
+        }
+        .category-chevron { font-size: 0.8rem; color: var(--papaya); transition: transform 0.3s; display: inline-block; }
+        .category-chevron.open { transform: rotate(180deg); }
+        .category-items {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1); background: #fff;
+        }
+        .category-items.open { max-height: 4000px; }
         .gift-item {
-            display: flex; align-items: center; gap: 1.25rem;
-            background: #fff; border-radius: 15px;
-            padding: 1.2rem 1.5rem 1.2rem 1.25rem;
-            border: 1px solid rgba(241,138,122,0.15);
-            border-left: 3px solid var(--papaya);
-            box-shadow: 0 2px 14px rgba(140,47,29,0.05);
-            transition: transform 0.22s, box-shadow 0.22s;
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.9rem 1.5rem;
+            border-bottom: 1px solid rgba(241,138,122,0.08);
+            transition: background 0.18s;
         }
-        .gift-item:hover {
-            transform: translateX(6px);
-            box-shadow: 0 5px 22px rgba(140,47,29,0.1);
+        .gift-item:last-child { border-bottom: none; }
+        .gift-item:hover:not(.gifted) { background: rgba(253,245,240,0.7); }
+        .gift-item.gifted { opacity: 0.4; }
+        .gift-name { flex: 1; min-width: 0; }
+        .gift-name strong {
+            display: block; font-family: 'Playfair Display', serif;
+            font-size: 0.92rem; color: var(--rust); line-height: 1.3;
         }
-        .gift-name { flex: 1; }
-        .gift-name strong { display: block; font-family: 'Playfair Display', serif; font-size: 0.97rem; color: var(--rust); }
-        .gift-name span { font-size: 0.8rem; color: var(--light); }
-        .gift-value { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--paprika); font-weight: 600; white-space: nowrap; }
+        .gift-item.gifted .gift-name strong { text-decoration: line-through; }
+        .gift-name span { font-size: 0.75rem; color: var(--light); }
+        .gift-value {
+            font-family: 'Playfair Display', serif; font-size: 0.88rem;
+            color: var(--paprika); font-weight: 600; white-space: nowrap; flex-shrink: 0;
+        }
+        .gift-btn {
+            background: none; border: 1.5px solid rgba(241,138,122,0.5);
+            color: var(--rust); font-size: 0.7rem;
+            padding: 0.3rem 0.8rem; border-radius: 50px;
+            cursor: pointer; white-space: nowrap; flex-shrink: 0;
+            transition: all 0.22s; font-family: inherit;
+        }
+        .gift-btn:hover:not([disabled]) { background: var(--papaya); color: #fff; border-color: var(--papaya); }
+        .gift-btn[disabled] {
+            background: rgba(140,47,29,0.06); border-color: rgba(140,47,29,0.15);
+            color: var(--mid); cursor: default; font-size: 0.68rem;
+        }
+        @media (max-width: 420px) {
+            .gift-item { flex-wrap: wrap; padding: 0.85rem 1rem; }
+            .gift-name { flex-basis: 100%; margin-bottom: 0.3rem; }
+            .category-header { padding: 1rem; }
+        }
 
         .pix-box {
             background: linear-gradient(145deg, #50150A, var(--rust));
@@ -837,54 +901,334 @@
             </svg>
         </div>
 
-        <p class="reveal reveal-d2" style="text-align:center;font-family:'Playfair Display',serif;font-style:italic;color:var(--mid);font-size:1rem;margin-bottom:2.75rem;line-height:1.75">
-            "Sua presença já é o nosso maior presente.<br>Se quiser nos dar um presentinho, aqui estão nossas sugestões com muito amor."
+        <p class="gift-intro reveal reveal-d2">
+            A sua presença no nosso grande dia já é o presente mais lindo que poderíamos receber.<br><br>
+            Se quiser nos presentear, pode contribuir com qualquer valor que venha do seu coração — não há mínimo, não há certo ou errado, só gratidão e muito amor.<br><br>
+            E se quiser uma ideia de algo especial para nos dar, é só expandir as categorias abaixo, escolher o que tocar no seu coração e marcar como presenteado. ♡
         </p>
 
-        <div class="gift-list reveal reveal-d3">
-            <div class="gift-item">
-                <div class="gift-name">
-                    <strong>Cafeteira / Máquina de Café</strong>
-                    <span>Para o café da manhã do casal</span>
+        <button class="toggle-list-btn reveal reveal-d3" id="toggleListBtn" onclick="toggleGiftList()">
+            ♡ Ver sugestões de presentes
+        </button>
+
+        <div class="gift-list-container" id="giftListContainer" style="display:none">
+
+            <!-- COZINHA -->
+            <div class="gift-category">
+                <button class="category-header" onclick="toggleCategory('cozinha')">
+                    <span class="category-header-left">
+                        <span class="category-icon">🍳</span>
+                        <span>Cozinha</span>
+                    </span>
+                    <span style="display:flex;align-items:center;gap:0.6rem">
+                        <span class="category-count" id="count-cozinha"></span>
+                        <span class="category-chevron" id="chev-cozinha">▾</span>
+                    </span>
+                </button>
+                <div class="category-items" id="cat-cozinha">
+                    <div class="gift-item" id="item-geladeira">
+                        <div class="gift-name"><strong>Geladeira</strong><span>O coração da cozinha</span></div>
+                        <div class="gift-value">R$&nbsp;2.500</div>
+                        <button class="gift-btn" onclick="markGifted('geladeira',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-fogao">
+                        <div class="gift-name"><strong>Fogão</strong><span>Para cozinhar com amor</span></div>
+                        <div class="gift-value">R$&nbsp;900</div>
+                        <button class="gift-btn" onclick="markGifted('fogao',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-kit-panelas">
+                        <div class="gift-name"><strong>Kit de Panelas</strong><span>Receitas a dois</span></div>
+                        <div class="gift-value">R$&nbsp;350</div>
+                        <button class="gift-btn" onclick="markGifted('kit-panelas',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-pratos">
+                        <div class="gift-name"><strong>Pratos</strong><span>Para as refeições do novo lar</span></div>
+                        <div class="gift-value">R$&nbsp;150</div>
+                        <button class="gift-btn" onclick="markGifted('pratos',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-talheres">
+                        <div class="gift-name"><strong>Talheres</strong><span>Mesa bonita e completa</span></div>
+                        <div class="gift-value">R$&nbsp;120</div>
+                        <button class="gift-btn" onclick="markGifted('talheres',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-panos-prato">
+                        <div class="gift-name"><strong>Panos de Prato</strong><span>Pequeno detalhe, grande ajuda</span></div>
+                        <div class="gift-value">R$&nbsp;50</div>
+                        <button class="gift-btn" onclick="markGifted('panos-prato',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-lixo-cozinha">
+                        <div class="gift-name"><strong>Lixeira (2 unidades)</strong><span>Organização do novo lar</span></div>
+                        <div class="gift-value">R$&nbsp;80</div>
+                        <button class="gift-btn" onclick="markGifted('lixo-cozinha',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-liquidificador">
+                        <div class="gift-name"><strong>Liquidificador</strong><span>Vitaminas e receitas especiais</span></div>
+                        <div class="gift-value">R$&nbsp;180</div>
+                        <button class="gift-btn" onclick="markGifted('liquidificador',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-batedeira">
+                        <div class="gift-name"><strong>Batedeira</strong><span>Para os bolos de domingo</span></div>
+                        <div class="gift-value">R$&nbsp;280</div>
+                        <button class="gift-btn" onclick="markGifted('batedeira',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-airfryer">
+                        <div class="gift-name"><strong>Air Fryer</strong><span>Praticidade no dia a dia</span></div>
+                        <div class="gift-value">R$&nbsp;350</div>
+                        <button class="gift-btn" onclick="markGifted('airfryer',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-armario-cozinha">
+                        <div class="gift-name"><strong>Armário de Cozinha</strong><span>Espaço para organizar tudo</span></div>
+                        <div class="gift-value">R$&nbsp;600</div>
+                        <button class="gift-btn" onclick="markGifted('armario-cozinha',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-microondas">
+                        <div class="gift-name"><strong>Microondas</strong><span>Agilidade nas refeições</span></div>
+                        <div class="gift-value">R$&nbsp;350</div>
+                        <button class="gift-btn" onclick="markGifted('microondas',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-refratario">
+                        <div class="gift-name"><strong>Refratários</strong><span>Para guardar as delícias</span></div>
+                        <div class="gift-value">R$&nbsp;120</div>
+                        <button class="gift-btn" onclick="markGifted('refratario',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-formas-bolo">
+                        <div class="gift-name"><strong>Formas para Bolo</strong><span>Doces momentos juntos</span></div>
+                        <div class="gift-value">R$&nbsp;80</div>
+                        <button class="gift-btn" onclick="markGifted('formas-bolo',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-jarra-suco">
+                        <div class="gift-name"><strong>Jarra de Suco</strong><span>Tardes refrescantes a dois</span></div>
+                        <div class="gift-value">R$&nbsp;60</div>
+                        <button class="gift-btn" onclick="markGifted('jarra-suco',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-kit-utensilios">
+                        <div class="gift-name"><strong>Kit de Utensílios</strong><span>Essenciais na cozinha</span></div>
+                        <div class="gift-value">R$&nbsp;80</div>
+                        <button class="gift-btn" onclick="markGifted('kit-utensilios',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-porta-tempero">
+                        <div class="gift-name"><strong>Porta-Tempero</strong><span>Sabor em cada detalhe</span></div>
+                        <div class="gift-value">R$&nbsp;70</div>
+                        <button class="gift-btn" onclick="markGifted('porta-tempero',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-escorredor">
+                        <div class="gift-name"><strong>Escorredor de Louça</strong><span>Praticidade no dia a dia</span></div>
+                        <div class="gift-value">R$&nbsp;60</div>
+                        <button class="gift-btn" onclick="markGifted('escorredor',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-filtro-agua">
+                        <div class="gift-name"><strong>Filtro de Água</strong><span>Saúde e bem-estar</span></div>
+                        <div class="gift-value">R$&nbsp;180</div>
+                        <button class="gift-btn" onclick="markGifted('filtro-agua',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-potes-marmita">
+                        <div class="gift-name"><strong>Potes de Marmita</strong><span>Para o almoço do dia a dia</span></div>
+                        <div class="gift-value">R$&nbsp;80</div>
+                        <button class="gift-btn" onclick="markGifted('potes-marmita',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-tabua-cortar">
+                        <div class="gift-name"><strong>Tábua de Cortar</strong><span>Ingrediente de todo preparo</span></div>
+                        <div class="gift-value">R$&nbsp;50</div>
+                        <button class="gift-btn" onclick="markGifted('tabua-cortar',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-torradeira">
+                        <div class="gift-name"><strong>Torradeira / Sanduicheira</strong><span>Café da manhã especial</span></div>
+                        <div class="gift-value">R$&nbsp;130</div>
+                        <button class="gift-btn" onclick="markGifted('torradeira',this)">Presentear</button>
+                    </div>
                 </div>
-                <div class="gift-value">R$&nbsp;200</div>
             </div>
-            <div class="gift-item">
-                <div class="gift-name">
-                    <strong>Air Fryer</strong>
-                    <span>Praticidade para o dia a dia</span>
+
+            <!-- SALA -->
+            <div class="gift-category">
+                <button class="category-header" onclick="toggleCategory('sala')">
+                    <span class="category-header-left">
+                        <span class="category-icon">🛋️</span>
+                        <span>Sala</span>
+                    </span>
+                    <span style="display:flex;align-items:center;gap:0.6rem">
+                        <span class="category-count" id="count-sala"></span>
+                        <span class="category-chevron" id="chev-sala">▾</span>
+                    </span>
+                </button>
+                <div class="category-items" id="cat-sala">
+                    <div class="gift-item" id="item-televisao">
+                        <div class="gift-name"><strong>Televisão</strong><span>Filmes e noites a dois</span></div>
+                        <div class="gift-value">R$&nbsp;2.000</div>
+                        <button class="gift-btn" onclick="markGifted('televisao',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-mesa-jantar">
+                        <div class="gift-name"><strong>Mesa de Jantar</strong><span>Refeições em família</span></div>
+                        <div class="gift-value">R$&nbsp;800</div>
+                        <button class="gift-btn" onclick="markGifted('mesa-jantar',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-cadeiras">
+                        <div class="gift-name"><strong>Cadeiras (4 unidades)</strong><span>Para receber com carinho</span></div>
+                        <div class="gift-value">R$&nbsp;600</div>
+                        <button class="gift-btn" onclick="markGifted('cadeiras',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-centro-mesa">
+                        <div class="gift-name"><strong>Centro de Mesa</strong><span>Toque especial na decoração</span></div>
+                        <div class="gift-value">R$&nbsp;120</div>
+                        <button class="gift-btn" onclick="markGifted('centro-mesa',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-cortina">
+                        <div class="gift-name"><strong>Cortina</strong><span>Aconchego e privacidade</span></div>
+                        <div class="gift-value">R$&nbsp;200</div>
+                        <button class="gift-btn" onclick="markGifted('cortina',this)">Presentear</button>
+                    </div>
                 </div>
-                <div class="gift-value">R$&nbsp;350</div>
             </div>
-            <div class="gift-item">
-                <div class="gift-name">
-                    <strong>Jogo de Cama Queen</strong>
-                    <span>Para o novo lar do casal</span>
+
+            <!-- QUARTO -->
+            <div class="gift-category">
+                <button class="category-header" onclick="toggleCategory('quarto')">
+                    <span class="category-header-left">
+                        <span class="category-icon">🛏️</span>
+                        <span>Quarto</span>
+                    </span>
+                    <span style="display:flex;align-items:center;gap:0.6rem">
+                        <span class="category-count" id="count-quarto"></span>
+                        <span class="category-chevron" id="chev-quarto">▾</span>
+                    </span>
+                </button>
+                <div class="category-items" id="cat-quarto">
+                    <div class="gift-item" id="item-guarda-roupa">
+                        <div class="gift-name"><strong>Guarda-Roupa</strong><span>Organização do novo casal</span></div>
+                        <div class="gift-value">R$&nbsp;1.200</div>
+                        <button class="gift-btn" onclick="markGifted('guarda-roupa',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-criado-mudo">
+                        <div class="gift-name"><strong>Criado-Mudo (par)</strong><span>Ao lado da cama do casal</span></div>
+                        <div class="gift-value">R$&nbsp;300</div>
+                        <button class="gift-btn" onclick="markGifted('criado-mudo',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-abajur">
+                        <div class="gift-name"><strong>Abajur</strong><span>Luz e romantismo no quarto</span></div>
+                        <div class="gift-value">R$&nbsp;150</div>
+                        <button class="gift-btn" onclick="markGifted('abajur',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-cabides">
+                        <div class="gift-name"><strong>Cabides</strong><span>Para as roupas do casal</span></div>
+                        <div class="gift-value">R$&nbsp;50</div>
+                        <button class="gift-btn" onclick="markGifted('cabides',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-jogo-cama">
+                        <div class="gift-name"><strong>Jogo de Cama</strong><span>Noites aconchegantes a dois</span></div>
+                        <div class="gift-value">R$&nbsp;280</div>
+                        <button class="gift-btn" onclick="markGifted('jogo-cama',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-travesseiros">
+                        <div class="gift-name"><strong>Travesseiros (par)</strong><span>Para sonhos a dois</span></div>
+                        <div class="gift-value">R$&nbsp;120</div>
+                        <button class="gift-btn" onclick="markGifted('travesseiros',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-edredom">
+                        <div class="gift-name"><strong>Edredom</strong><span>Abraço quentinho do casal</span></div>
+                        <div class="gift-value">R$&nbsp;200</div>
+                        <button class="gift-btn" onclick="markGifted('edredom',this)">Presentear</button>
+                    </div>
                 </div>
-                <div class="gift-value">R$&nbsp;280</div>
             </div>
-            <div class="gift-item">
-                <div class="gift-name">
-                    <strong>Aparelho de Jantar</strong>
-                    <span>Para as refeições em família</span>
+
+            <!-- LAVANDERIA -->
+            <div class="gift-category">
+                <button class="category-header" onclick="toggleCategory('lavanderia')">
+                    <span class="category-header-left">
+                        <span class="category-icon">🧺</span>
+                        <span>Lavanderia</span>
+                    </span>
+                    <span style="display:flex;align-items:center;gap:0.6rem">
+                        <span class="category-count" id="count-lavanderia"></span>
+                        <span class="category-chevron" id="chev-lavanderia">▾</span>
+                    </span>
+                </button>
+                <div class="category-items" id="cat-lavanderia">
+                    <div class="gift-item" id="item-maquina-lavar">
+                        <div class="gift-name"><strong>Máquina de Lavar</strong><span>Essencial no novo lar</span></div>
+                        <div class="gift-value">R$&nbsp;2.200</div>
+                        <button class="gift-btn" onclick="markGifted('maquina-lavar',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-varal">
+                        <div class="gift-name"><strong>Varal de Chão</strong><span>Para o dia a dia da casa</span></div>
+                        <div class="gift-value">R$&nbsp;100</div>
+                        <button class="gift-btn" onclick="markGifted('varal',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-vassoura">
+                        <div class="gift-name"><strong>Vassoura / Aspirador</strong><span>Casa limpinha e feliz</span></div>
+                        <div class="gift-value">R$&nbsp;250</div>
+                        <button class="gift-btn" onclick="markGifted('vassoura',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-rodo">
+                        <div class="gift-name"><strong>Rodo</strong><span>Pequeno e indispensável</span></div>
+                        <div class="gift-value">R$&nbsp;40</div>
+                        <button class="gift-btn" onclick="markGifted('rodo',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-baldes">
+                        <div class="gift-name"><strong>Baldes</strong><span>Sempre úteis no lar</span></div>
+                        <div class="gift-value">R$&nbsp;50</div>
+                        <button class="gift-btn" onclick="markGifted('baldes',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-tabua-passar">
+                        <div class="gift-name"><strong>Tábua de Passar</strong><span>Roupas sempre impecáveis</span></div>
+                        <div class="gift-value">R$&nbsp;80</div>
+                        <button class="gift-btn" onclick="markGifted('tabua-passar',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-ferro-passar">
+                        <div class="gift-name"><strong>Ferro de Passar</strong><span>Acabamento perfeito</span></div>
+                        <div class="gift-value">R$&nbsp;120</div>
+                        <button class="gift-btn" onclick="markGifted('ferro-passar',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-panos-chao">
+                        <div class="gift-name"><strong>Panos de Chão</strong><span>Para a limpeza do lar</span></div>
+                        <div class="gift-value">R$&nbsp;40</div>
+                        <button class="gift-btn" onclick="markGifted('panos-chao',this)">Presentear</button>
+                    </div>
                 </div>
-                <div class="gift-value">R$&nbsp;300</div>
             </div>
-            <div class="gift-item">
-                <div class="gift-name">
-                    <strong>Liquidificador / Mixer</strong>
-                    <span>Vitaminas e receitas a dois</span>
+
+            <!-- BANHEIRO -->
+            <div class="gift-category">
+                <button class="category-header" onclick="toggleCategory('banheiro')">
+                    <span class="category-header-left">
+                        <span class="category-icon">🚿</span>
+                        <span>Banheiro</span>
+                    </span>
+                    <span style="display:flex;align-items:center;gap:0.6rem">
+                        <span class="category-count" id="count-banheiro"></span>
+                        <span class="category-chevron" id="chev-banheiro">▾</span>
+                    </span>
+                </button>
+                <div class="category-items" id="cat-banheiro">
+                    <div class="gift-item" id="item-assento-vaso">
+                        <div class="gift-name"><strong>Assento de Vaso</strong><span>Conforto em casa</span></div>
+                        <div class="gift-value">R$&nbsp;80</div>
+                        <button class="gift-btn" onclick="markGifted('assento-vaso',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-toalhas">
+                        <div class="gift-name"><strong>Jogo de Toalhas</strong><span>Maciez após o banho</span></div>
+                        <div class="gift-value">R$&nbsp;120</div>
+                        <button class="gift-btn" onclick="markGifted('toalhas',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-tapete-banheiro">
+                        <div class="gift-name"><strong>Tapete de Banheiro</strong><span>Toque aconchegante</span></div>
+                        <div class="gift-value">R$&nbsp;60</div>
+                        <button class="gift-btn" onclick="markGifted('tapete-banheiro',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-lixo-banheiro">
+                        <div class="gift-name"><strong>Lixeira de Banheiro</strong><span>Organização e higiene</span></div>
+                        <div class="gift-value">R$&nbsp;40</div>
+                        <button class="gift-btn" onclick="markGifted('lixo-banheiro',this)">Presentear</button>
+                    </div>
+                    <div class="gift-item" id="item-saboneteira">
+                        <div class="gift-name"><strong>Saboneteira / Sabão Líquido</strong><span>Limpeza com estilo</span></div>
+                        <div class="gift-value">R$&nbsp;50</div>
+                        <button class="gift-btn" onclick="markGifted('saboneteira',this)">Presentear</button>
+                    </div>
                 </div>
-                <div class="gift-value">R$&nbsp;180</div>
             </div>
-            <div class="gift-item">
-                <div class="gift-name">
-                    <strong>Lua de Mel</strong>
-                    <span>Contribua para a viagem dos sonhos</span>
-                </div>
-                <div class="gift-value">Livre</div>
-            </div>
-        </div>
+
+        </div><!-- /gift-list-container -->
 
         <div class="pix-box reveal">
             <h3>Presenteie via Pix</h3>
@@ -1022,6 +1366,65 @@
             showToast('Ocorreu um erro. Tente novamente.');
         }
     });
+
+    /* ── Gift List ── */
+    var GIFTED_KEY = 'hs_gifted';
+    var GIFT_CATS  = ['cozinha','sala','quarto','lavanderia','banheiro'];
+
+    function getGifted() {
+        try { return JSON.parse(localStorage.getItem(GIFTED_KEY) || '[]'); } catch (_) { return []; }
+    }
+    function saveGifted(arr) {
+        try { localStorage.setItem(GIFTED_KEY, JSON.stringify(arr)); } catch (_) {}
+    }
+    function updateCount(catId) {
+        var all  = document.querySelectorAll('#cat-' + catId + ' .gift-item').length;
+        var done = document.querySelectorAll('#cat-' + catId + ' .gift-item.gifted').length;
+        var rem  = all - done;
+        var el   = document.getElementById('count-' + catId);
+        if (el) el.textContent = rem + ' disponíve' + (rem === 1 ? 'l' : 'is');
+    }
+
+    window.toggleGiftList = function () {
+        var container = document.getElementById('giftListContainer');
+        var btn       = document.getElementById('toggleListBtn');
+        var hidden    = container.style.display === 'none';
+        container.style.display = hidden ? 'block' : 'none';
+        btn.textContent = hidden ? '✕ Fechar lista' : '♡ Ver sugestões de presentes';
+    };
+
+    window.toggleCategory = function (catId) {
+        var items = document.getElementById('cat-' + catId);
+        var chev  = document.getElementById('chev-' + catId);
+        var open  = items.classList.toggle('open');
+        chev.classList.toggle('open', open);
+    };
+
+    window.markGifted = function (itemId, btn) {
+        var gifted = getGifted();
+        if (gifted.indexOf(itemId) !== -1) return;
+        gifted.push(itemId);
+        saveGifted(gifted);
+        var item = document.getElementById('item-' + itemId);
+        item.classList.add('gifted');
+        btn.textContent = '♡ Presenteado';
+        btn.disabled    = true;
+        updateCount(item.closest('.category-items').id.replace('cat-', ''));
+        showToast('Que presente lindo! Muito obrigado pelo carinho ♡');
+    };
+
+    // Restore gifted state on load
+    (function () {
+        var gifted = getGifted();
+        gifted.forEach(function (id) {
+            var item = document.getElementById('item-' + id);
+            if (!item) return;
+            item.classList.add('gifted');
+            var b = item.querySelector('.gift-btn');
+            if (b) { b.textContent = '♡ Presenteado'; b.disabled = true; }
+        });
+        GIFT_CATS.forEach(updateCount);
+    }());
 
     /* ── Pix copy ── */
     window.copyPix = function () {
