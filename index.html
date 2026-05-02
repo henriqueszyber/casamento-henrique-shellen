@@ -97,7 +97,7 @@
         }
         .hero-eyebrow {
             font-size: 0.68rem; letter-spacing: 0.38em; text-transform: uppercase;
-            color: rgba(255,216,193,0.7); margin-bottom: 1.5rem;
+            color: rgb(251, 226, 211); margin-bottom: 1.5rem;
             animation: fadeUp 1s 0.2s both;
         }
         .hero-names {
@@ -138,7 +138,7 @@
         .hero-tagline {
             font-family: 'Playfair Display', serif; font-style: italic;
             font-size: clamp(1rem, 3.5vw, 1.25rem);
-            color: rgba(255,216,193,0.82); margin-top: 1.5rem;
+            color: rgb(255, 216, 193); margin-top: 1.5rem;
             animation: fadeUp 1s 1.1s both;
         }
         .hero-cta {
@@ -154,12 +154,12 @@
             position: absolute; bottom: 2.5rem; left: 50%;
             transform: translateX(-50%); z-index: 1;
             display: flex; flex-direction: column; align-items: center; gap: 0.45rem;
-            color: rgba(255,216,193,0.45); font-size: 0.62rem; letter-spacing: 0.22em;
+            color: rgb(255, 216, 193); font-size: 0.62rem; letter-spacing: 0.22em;
             text-transform: uppercase; animation: fadeIn 2s 2.2s both;
         }
         .scroll-hint::after {
             content: ''; width: 1px; height: 38px;
-            background: linear-gradient(to bottom, rgba(255,216,193,0.45), transparent);
+            background: linear-gradient(to bottom, rgb(255, 216, 193), transparent);
             animation: scrollPulse 2s ease-in-out infinite;
         }
 
@@ -635,8 +635,8 @@
             to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes scrollPulse {
-            0%, 100% { opacity: 0.45; transform: scaleY(0.6); transform-origin: top; }
-            50%       { opacity: 0.9;  transform: scaleY(1);   transform-origin: top; }
+            0%, 100% { opacity: 0.65; transform: scaleY(0.6); transform-origin: top; }
+            50%       { opacity: 1;    transform: scaleY(1);   transform-origin: top; }
         }
 
         .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.7s ease, transform 0.7s ease; }
@@ -699,7 +699,6 @@
         <div class="hero-rule"><span>♡</span></div>
         <div class="hero-date-block">
             <span class="hero-date">22 &nbsp;·&nbsp; 07 &nbsp;·&nbsp; 2026</span>
-            <span class="hero-city">São Paulo</span>
         </div>
         <p class="hero-tagline">Os dois se tornam um</p>
         <a href="#confirmar" class="hero-cta">Confirmar Presença</a>
@@ -1258,6 +1257,10 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 <script>
 (function () {
     'use strict';
@@ -1367,16 +1370,24 @@
         }
     });
 
-    /* ── Gift List ── */
-    var GIFTED_KEY = 'hs_gifted';
-    var GIFT_CATS  = ['cozinha','sala','quarto','lavanderia','banheiro'];
+    /* ── Gift List — Firebase Realtime Database ── */
+    var GIFT_CATS = ['cozinha','sala','quarto','lavanderia','banheiro'];
 
-    function getGifted() {
-        try { return JSON.parse(localStorage.getItem(GIFTED_KEY) || '[]'); } catch (_) { return []; }
-    }
-    function saveGifted(arr) {
-        try { localStorage.setItem(GIFTED_KEY, JSON.stringify(arr)); } catch (_) {}
-    }
+    // ▼▼▼ COLE AQUI A CONFIG DO SEU PROJETO FIREBASE ▼▼▼
+    var firebaseConfig = {
+        apiKey:            "AIzaSyAyaQlsxa0OfiGFks5M1aTyuK6UMDvDzOA",
+        authDomain:        "casamento-henrique-e-shellen.firebaseapp.com",
+        databaseURL:       "https://casamento-henrique-e-shellen-default-rtdb.firebaseio.com",
+        projectId:         "casamento-henrique-e-shellen",
+        storageBucket:     "casamento-henrique-e-shellen.firebasestorage.app",
+        messagingSenderId: "951178129804",
+        appId:             "1:951178129804:web:1f1cac641726f69da7a6a9"
+    };
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+    firebase.initializeApp(firebaseConfig);
+    var giftsRef = firebase.database().ref('gifts');
+
     function updateCount(catId) {
         var all  = document.querySelectorAll('#cat-' + catId + ' .gift-item').length;
         var done = document.querySelectorAll('#cat-' + catId + ' .gift-item.gifted').length;
@@ -1384,6 +1395,26 @@
         var el   = document.getElementById('count-' + catId);
         if (el) el.textContent = rem + ' disponíve' + (rem === 1 ? 'l' : 'is');
     }
+
+    // Conta imediata no carregamento (antes do Firebase responder)
+    GIFT_CATS.forEach(updateCount);
+
+    // Listener em tempo real — sincroniza todos os visitantes
+    giftsRef.on('value', function (snapshot) {
+        var data = snapshot.val() || {};
+        document.querySelectorAll('.gift-item').forEach(function (item) {
+            var id  = item.id.replace('item-', '');
+            var btn = item.querySelector('.gift-btn');
+            if (data[id]) {
+                item.classList.add('gifted');
+                if (btn) { btn.textContent = '♡ Presenteado'; btn.disabled = true; }
+            } else {
+                item.classList.remove('gifted');
+                if (btn) { btn.textContent = 'Presentear'; btn.disabled = false; }
+            }
+        });
+        GIFT_CATS.forEach(updateCount);
+    });
 
     window.toggleGiftList = function () {
         var container = document.getElementById('giftListContainer');
@@ -1401,30 +1432,14 @@
     };
 
     window.markGifted = function (itemId, btn) {
-        var gifted = getGifted();
-        if (gifted.indexOf(itemId) !== -1) return;
-        gifted.push(itemId);
-        saveGifted(gifted);
         var item = document.getElementById('item-' + itemId);
         item.classList.add('gifted');
         btn.textContent = '♡ Presenteado';
         btn.disabled    = true;
         updateCount(item.closest('.category-items').id.replace('cat-', ''));
+        giftsRef.child(itemId).set(true);
         showToast('Que presente lindo! Muito obrigado pelo carinho ♡');
     };
-
-    // Restore gifted state on load
-    (function () {
-        var gifted = getGifted();
-        gifted.forEach(function (id) {
-            var item = document.getElementById('item-' + id);
-            if (!item) return;
-            item.classList.add('gifted');
-            var b = item.querySelector('.gift-btn');
-            if (b) { b.textContent = '♡ Presenteado'; b.disabled = true; }
-        });
-        GIFT_CATS.forEach(updateCount);
-    }());
 
     /* ── Pix copy ── */
     window.copyPix = function () {
