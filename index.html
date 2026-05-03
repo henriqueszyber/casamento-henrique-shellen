@@ -96,7 +96,9 @@
             display: flex; flex-direction: column; align-items: center;
         }
         .hero-eyebrow {
-            font-size: 0.68rem; letter-spacing: 0.38em; text-transform: uppercase;
+            font-size: clamp(0.54rem, 1.8vw, 0.68rem);
+            letter-spacing: clamp(0.12em, 1.5vw, 0.38em);
+            text-transform: uppercase;
             color: rgb(251, 226, 211); margin-bottom: 1.5rem;
             animation: fadeUp 1s 0.2s both;
         }
@@ -255,7 +257,12 @@
 
         /* ── EVENT ── */
         .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-        @media (max-width: 480px) { .details-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 480px) {
+            .details-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+            .detail-card { padding: 1.4rem 1.2rem; border-radius: 16px; }
+            .polaroid { max-width: 170px; }
+            .polaroid-scene { margin: 2rem 0 0.5rem; }
+        }
         .detail-card {
             background: #fff; border-radius: 20px;
             padding: 2.25rem 1.5rem; text-align: center;
@@ -651,7 +658,7 @@
 
 <!-- NAV -->
 <nav id="nav">
-    <a href="#evento">O Evento</a>
+    <a href="#evento">Evento</a>
     <a href="#confirmar">Confirmar</a>
     <a href="#presentes">Presentes</a>
 </nav>
