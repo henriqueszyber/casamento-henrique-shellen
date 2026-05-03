@@ -686,6 +686,63 @@
         .footer-date { font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,216,193,0.38); }
         .footer-love { font-size: 0.75rem; color: rgba(255,216,193,0.3); margin-top: 1.75rem; }
 
+        /* ── ADMIN PANEL ── */
+        .admin-fab {
+            position: fixed; bottom: 5.5rem; right: 1.25rem; z-index: 300;
+            background: var(--rust); color: var(--peach);
+            border: none; border-radius: 50%; width: 46px; height: 46px;
+            font-size: 1.1rem; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(61,26,14,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .admin-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(61,26,14,0.4); }
+        .admin-drawer {
+            position: fixed; bottom: 0; right: 0; left: 0; z-index: 299;
+            max-width: 420px; margin: 0 auto;
+            background: var(--cream); border-radius: 22px 22px 0 0;
+            box-shadow: 0 -8px 40px rgba(61,26,14,0.18);
+            padding: 0 1.5rem 2rem;
+            transform: translateY(100%);
+            transition: transform 0.38s cubic-bezier(0.4,0,0.2,1);
+        }
+        .admin-drawer.open { transform: translateY(0); }
+        .admin-handle {
+            width: 38px; height: 4px; background: rgba(140,47,29,0.18);
+            border-radius: 2px; margin: 1rem auto 1.25rem;
+        }
+        .admin-drawer h3 {
+            font-family: 'Playfair Display', serif; font-size: 1.1rem;
+            color: var(--rust); text-align: center; margin-bottom: 1.1rem;
+        }
+        .admin-stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem;
+            margin-bottom: 1.1rem;
+        }
+        .admin-stat {
+            background: #fff; border-radius: 14px; padding: 0.8rem 0.4rem;
+            text-align: center; border: 1px solid rgba(241,138,122,0.18);
+        }
+        .admin-stat-num {
+            display: block; font-family: 'Playfair Display', serif;
+            font-size: 1.65rem; color: var(--rust); line-height: 1; margin-bottom: 0.25rem;
+        }
+        .admin-stat-label { font-size: 0.6rem; color: var(--light); text-transform: uppercase; letter-spacing: 0.07em; }
+        .admin-divider { height: 1px; background: rgba(241,138,122,0.15); margin-bottom: 0.85rem; }
+        .admin-list { max-height: 220px; overflow-y: auto; }
+        .admin-list-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.55rem 0; border-bottom: 1px solid rgba(241,138,122,0.09);
+            font-size: 0.84rem;
+        }
+        .admin-list-item:last-child { border-bottom: none; }
+        .admin-list-name { color: var(--dark); }
+        .admin-badge {
+            font-size: 0.65rem; padding: 0.18rem 0.6rem; border-radius: 50px; font-weight: 600; flex-shrink: 0;
+        }
+        .badge-presencial { background: rgba(60,160,60,0.1); color: #2e7a2e; }
+        .badge-virtual    { background: rgba(50,90,200,0.1); color: #2a4aaa; }
+        .badge-nao        { background: rgba(200,60,60,0.1); color: #a02828; }
+
         /* ── TOAST ── */
         .toast {
             position: fixed; bottom: 2rem; left: 50%;
@@ -1336,6 +1393,37 @@
     <p class="footer-love">Feito com ♡ para o nosso grande dia</p>
 </footer>
 
+<!-- Admin Panel (visível apenas com ?admin na URL) -->
+<div id="adminPanel" style="display:none">
+    <button class="admin-fab" onclick="toggleAdminDrawer()" title="Ver confirmações">📋</button>
+    <div class="admin-drawer" id="adminDrawer">
+        <div class="admin-handle"></div>
+        <h3>Confirmações de Presença</h3>
+        <div class="admin-stats-grid">
+            <div class="admin-stat">
+                <span class="admin-stat-num" id="statTotal">—</span>
+                <span class="admin-stat-label">Total</span>
+            </div>
+            <div class="admin-stat">
+                <span class="admin-stat-num" id="statPresencial">—</span>
+                <span class="admin-stat-label">Presencial</span>
+            </div>
+            <div class="admin-stat">
+                <span class="admin-stat-num" id="statVirtual">—</span>
+                <span class="admin-stat-label">Virtual</span>
+            </div>
+            <div class="admin-stat">
+                <span class="admin-stat-num" id="statNao">—</span>
+                <span class="admin-stat-label">Não vão</span>
+            </div>
+        </div>
+        <div class="admin-divider"></div>
+        <div class="admin-list" id="adminList">
+            <p style="text-align:center;font-size:0.82rem;color:var(--light)">Carregando...</p>
+        </div>
+    </div>
+</div>
+
 <!-- Gift Confirmation Modal -->
 <div class="gift-modal-overlay" id="giftModal" role="dialog" aria-modal="true" aria-labelledby="giftModalTitle">
     <div class="gift-modal">
@@ -1604,6 +1692,45 @@
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') closeGiftModal();
     });
+
+    /* ── Admin Panel ── */
+    if (new URLSearchParams(window.location.search).has('admin')) {
+        document.getElementById('adminPanel').style.display = 'block';
+
+        firebase.database().ref('rsvp').on('value', function (snapshot) {
+            var entries = [];
+            snapshot.forEach(function (child) { entries.push(child.val()); });
+
+            var presencial = entries.filter(function (e) { return e.presenca === 'Presencialmente'; }).length;
+            var virtual    = entries.filter(function (e) { return e.presenca === 'Virtualmente'; }).length;
+            var nao        = entries.filter(function (e) { return e.presenca === 'Não poderei comparecer'; }).length;
+
+            document.getElementById('statTotal').textContent     = entries.length;
+            document.getElementById('statPresencial').textContent = presencial;
+            document.getElementById('statVirtual').textContent    = virtual;
+            document.getElementById('statNao').textContent        = nao;
+
+            var list = document.getElementById('adminList');
+            if (!entries.length) {
+                list.innerHTML = '<p style="text-align:center;font-size:0.82rem;color:var(--light)">Nenhuma confirmação ainda.</p>';
+                return;
+            }
+            list.innerHTML = entries.slice().reverse().map(function (e) {
+                var cls  = e.presenca === 'Presencialmente' ? 'badge-presencial' :
+                           e.presenca === 'Virtualmente'    ? 'badge-virtual'    : 'badge-nao';
+                var lbl  = e.presenca === 'Presencialmente' ? 'Presencial' :
+                           e.presenca === 'Virtualmente'    ? 'Virtual'    : 'Não vai';
+                return '<div class="admin-list-item">' +
+                       '<span class="admin-list-name">' + e.nome + '</span>' +
+                       '<span class="admin-badge ' + cls + '">' + lbl + '</span>' +
+                       '</div>';
+            }).join('');
+        });
+    }
+
+    window.toggleAdminDrawer = function () {
+        document.getElementById('adminDrawer').classList.toggle('open');
+    };
 
     /* ── Pix copy ── */
     window.copyPix = function () {
