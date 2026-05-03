@@ -1468,13 +1468,8 @@
         if (email) data.email = email;
 
         try {
-            const res = await fetch('https://formspree.io/f/xjgjjlqw', {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-            if (!res.ok) throw new Error('network');
-
+            data.timestamp = Date.now();
+            await firebase.database().ref('rsvp').push(data);
             form.style.display = 'none';
             document.getElementById('formMessageStep').style.display = 'block';
         } catch (_) {
@@ -1497,11 +1492,11 @@
         document.getElementById('formMessageStep').style.display = 'none';
         document.getElementById('formSuccess').style.display = 'block';
         if (!msg) return;
-        fetch('https://formspree.io/f/xjgjjlqw', {
-            method: 'POST',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nome: submittedNome, mensagem: msg }),
-        }).catch(function () {});
+        firebase.database().ref('mensagens').push({
+            nome: submittedNome,
+            mensagem: msg,
+            timestamp: Date.now()
+        });
     };
 
     /* ── Gift List — Firebase Realtime Database ── */
